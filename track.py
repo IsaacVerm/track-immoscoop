@@ -2,6 +2,7 @@ import requests
 from bs4 import BeautifulSoup
 import re
 import csv
+import datetime
 
 def fetch_immoscoop_page():
     url = "https://www.immoscoop.be/zoeken/te-huur/brugge/appartement?minBedrooms=1&maxBedrooms=2&maxPrice=900&maxEpcScore=200&sort=price%2CASC"
@@ -53,12 +54,15 @@ def save_to_csv(properties, filename='immoscoop_properties.csv'):
         print("No properties to save")
         return
     
-    fieldnames = ['url', 'price', 'epc']
+    fieldnames = ['url', 'price', 'epc', 'date']
+    
+    today = datetime.date.today().isoformat()
     
     with open(filename, 'w', newline='', encoding='utf-8') as f:
         writer = csv.DictWriter(f, fieldnames=fieldnames)
         writer.writeheader()
         for prop in properties:
+            prop['date'] = today
             writer.writerow(prop)
     
     print(f"Saved {len(properties)} properties to {filename}")
