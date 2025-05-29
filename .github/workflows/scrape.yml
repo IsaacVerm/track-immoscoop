@@ -1,0 +1,29 @@
+name: Scrape Immoscoop
+
+on:
+  schedule:
+    # Runs at 00:00 UTC every day
+    - cron: '0 0 * * *'
+  workflow_dispatch:  # Allows manual triggering of the workflow
+
+jobs:
+  run-track-script:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.12'  # Choose your Python version
+          
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          # If you have a requirements.txt file, uncomment the next line
+          pip install -r requirements.txt
+          
+      - name: Run track.py
+        run: python track.py
