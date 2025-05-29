@@ -62,6 +62,9 @@ def save_to_csv(properties, filename='immoscoop_properties.csv'):
         writer = csv.DictWriter(f, fieldnames=fieldnames)
         writer.writeheader()
         for prop in properties:
+            # url parsed isn't full URL, so we need to prepend the base URL
+            prop['url'] = f"https://www.immoscoop.be{prop['url']}"
+            
             prop['date'] = today
             writer.writerow(prop)
     
