@@ -3,6 +3,7 @@ from bs4 import BeautifulSoup
 import re
 import csv
 import datetime
+import os
 
 def fetch_immoscoop_page():
     url = "https://www.immoscoop.be/zoeken/te-huur/brugge/appartement?minBedrooms=1&maxBedrooms=2&maxPrice=900&maxEpcScore=200&sort=price%2CASC"
@@ -58,9 +59,13 @@ def save_to_csv(properties, filename='immoscoop_properties.csv'):
     
     today = datetime.date.today().isoformat()
     
-    with open(filename, 'w', newline='', encoding='utf-8') as f:
+    with open(filename, 'a', newline='', encoding='utf-8') as f:
         writer = csv.DictWriter(f, fieldnames=fieldnames)
-        writer.writeheader()
+        
+        # Only write header if file doesn't exist yet
+        if not os.path.isfile(filename):
+            writer.writeheader()
+        
         for prop in properties:
             # url parsed isn't full URL, so we need to prepend the base URL
             prop['url'] = f"https://www.immoscoop.be{prop['url']}"
